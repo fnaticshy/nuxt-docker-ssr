@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: docker-boilerplate-frontend
+    command: npm run start
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+
+  api:
+    build: ./api
+    container_name: docker-boilerplate-api
+    command: npm run start
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - HOST=http://docker-boilerplate.com
+      - MONGO_URL=mongodb://api_db:27017/api
+    depends_on:
+      - api_db
+
+  api_db:
+    image: mongo:latest
+    container_name: docker-boilerplate-api_db
+    volumes:
+      - mongodb_api:/data/db
+
+  auth:
+    build: ./auth
+    container_name: docker-boilerplate-auth
+    command: npm run start
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - HOST=http://docker-boilerplate.com
+      - MONGO_URL=mongodb://auth_db:27017/auth
+    depends_on:
+      - auth_db
+
+  auth_db:
+    image: mongo:latest
+    container_name: docker-boilerplate-auth_db
+    volumes:
+      - mongodb_auth:/data/db
+
+volumes:
+  mongodb_api:
+  mongodb_auth:
+
