@@ -4,9 +4,9 @@ services:
   frontend:
     build: ./frontend
     container_name: docker-boilerplate-frontend
-    command: npm run start
-    ports:
-      - "3000:3000"
+    command: npm run docker
+    #ports:
+    #  - "3000:3000"
     restart: unless-stopped
     environment:
       - HOST=0.0.0.0
@@ -51,6 +51,16 @@ services:
     container_name: docker-boilerplate-auth_db
     volumes:
       - mongodb_auth:/data/db
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: docker-boilerplate-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - "./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf"
+    depends_on:
+      - frontend
 
 volumes:
   mongodb_api:
