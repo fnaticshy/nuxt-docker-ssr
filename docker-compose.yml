@@ -11,6 +11,8 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=3000
+    networks:
+      - docker-boilerplate-network
 
   api:
     build: ./api
@@ -23,14 +25,19 @@ services:
       - PORT=3001
       - HOST=http://docker-boilerplate.com
       - MONGO_URL=mongodb://api_db:27017/api
+      - AUTH_API_URL=http://auth:3002/api
     depends_on:
       - api_db
+    networks:
+      - docker-boilerplate-network
 
   api_db:
     image: mongo:latest
     container_name: docker-boilerplate-api_db
     volumes:
       - mongodb_api:/data/db
+    networks:
+      - docker-boilerplate-network
 
   auth:
     build: ./auth
@@ -43,14 +50,19 @@ services:
       - PORT=3002
       - HOST=http://docker-boilerplate.com
       - MONGO_URL=mongodb://auth_db:27017/auth
+      - API_URL=http://api:3001/api
     depends_on:
       - auth_db
+    networks:
+      - docker-boilerplate-network
 
   auth_db:
     image: mongo:latest
     container_name: docker-boilerplate-auth_db
     volumes:
       - mongodb_auth:/data/db
+    networks:
+      - docker-boilerplate-network
 
   nginx:
     image: nginx:stable-alpine
@@ -61,8 +73,14 @@ services:
       - "./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf"
     depends_on:
       - frontend
+    networks:
+      - docker-boilerplate-network
 
 volumes:
   mongodb_api:
   mongodb_auth:
+
+networks:
+  docker-boilerplate-network:
+    driver: bridge
 
