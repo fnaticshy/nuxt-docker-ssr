@@ -5,8 +5,6 @@ services:
     build: ./frontend
     container_name: docker-boilerplate-frontend
     command: npm run docker
-    #ports:
-    #  - "3000:3000"
     restart: unless-stopped
     environment:
       - HOST=0.0.0.0
