@@ -52,7 +52,7 @@
       </a>
       <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="actionOneClickHandler">
-          action 1
+          action
         </button>
       </div>
     </div>

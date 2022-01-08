@@ -3,6 +3,10 @@ version: '3'
 services:
   frontend:
     build: ./frontend
+    # If you need dif files
+    # build:
+    #  context: ./frontend
+    #  dockerfile: Dockerfile.prod
     container_name: docker-boilerplate-frontend
     command: npm run docker
     restart: unless-stopped
@@ -17,11 +21,10 @@ services:
     container_name: docker-boilerplate-api
     command: npm run start
     restart: unless-stopped
-    ports:
-      - "3001:3001"
     environment:
       - PORT=3001
-      - HOST=http://docker-boilerplate.com
+      # For example if needed redirect inside service
+      # - HOST=http://docker-boilerplate.com
       - MONGO_URL=mongodb://api_db:27017/api
       - AUTH_API_URL=http://auth:3002/api
     depends_on:
@@ -42,11 +45,10 @@ services:
     container_name: docker-boilerplate-auth
     command: npm run start
     restart: unless-stopped
-    ports:
-      - "3002:3002"
     environment:
       - PORT=3002
-      - HOST=http://docker-boilerplate.com
+      # For example if needed redirect inside service
+      # - HOST=http://docker-boilerplate.com
       - MONGO_URL=mongodb://auth_db:27017/auth
       - API_URL=http://api:3001/api
     depends_on:
@@ -71,6 +73,8 @@ services:
       - "./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf"
     depends_on:
       - frontend
+      - api
+      - auth
     networks:
       - docker-boilerplate-network
 
